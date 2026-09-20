@@ -1,0 +1,23 @@
+services:
+  dronecam:
+    build: .
+    image: dronecam:latest
+    container_name: dronecam
+    restart: always  # Automatically starts on Raspberry Pi boot and restarts on crashes
+    privileged: true # Grants access to camera hardware (/dev/video0 and V4L2 subsystem)
+    devices:
+      - /dev/video0:/dev/video0
+    group_add:
+      - video
+    environment:
+      TELEGRAM_BOT_TOKEN: "8742112415:AAEFk59yO8BOsyCCGSHPatU0PfgzmNGeyTc"
+      TELEGRAM_CHAT_ID: "5334966139"
+      CAMERA_DEVICE: "/dev/video0"
+      HEADLESS: "true"
+      SCAN_FPS: "15"         # 15 FPS keeps Raspberry Pi CPU & temperature low
+      SEND_COOLDOWN: "10.0"  # Seconds before re-sending the same QR code
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"      # Protects Raspberry Pi SD card storage
+        max-file: "3"
